@@ -1,0 +1,128 @@
+{
+  "name": "chronicler",
+  "displayName": "liveRecorder",
+  "description": "Visual Studio Session Recorder",
+  "version": "0.1.0",
+  "publisher": "devsquad",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/"
+  },
+  "keywords": [
+    "Editor Recording",
+    "Video Recording",
+    "Session Recording",
+    "Audio Recording",
+    "Animated GIFs"
+  ],
+  "engines": {
+    "vscode": "^1.30.1"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "icon": "images/logo.png",
+  "galleryBanner": {
+    "color": "#c6cdd3",
+    "theme": "light"
+  },
+  "main": "./out/extension",
+  "contributes": {
+    "commands": [
+      {
+        "title": "Start session",
+        "category": "liveRecorder",
+        "command": "chronicler.share"
+      },
+      {
+        "title": "Start Recording",
+        "category": "liveRecorder",
+        "command": "chronicler.record"
+      },
+      {
+        "title": "Start Recording GIF",
+        "category": "liveRecorder",
+        "command": "chronicler.recordGif"
+      },
+      {
+        "title": "Start Recording with Audio",
+        "category": "liveRecorder",
+        "command": "chronicler.recordWithAudio"
+      },
+      {
+        "title": "Start Timed-Recording",
+        "category": "liveRecorder",
+        "command": "chronicler.recordWithDuration"
+      },
+      {
+        "title": "Stop Recording",
+        "category": "liveRecorder",
+        "command": "chronicler.stop"
+      }
+    ],
+    "keybindings": [
+      {
+        "key": "ctrl+alt+shift+r",
+        "mac": "cmd+alt+shift+r",
+        "command": "chronicler.record"
+      },
+      {
+        "key": "ctrl+alt+shift+s",
+        "mac": "cmd+alt+shift+s",
+        "command": "chronicler.stop"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "liveRecorder",
+        "properties": {
+          "chronicler.ffmpeg-binary": {
+            "description": "FFmpeg Binary Location",
+            "type": "string"
+          },
+          "chronicler.dest-folder": {
+            "description": "Output Folder for Captures",
+            "type": "~/Recordings"
+          },
+          "chronicler.recording-defaults": {
+            "description": "Recording defaults",
+            "type": "object",
+            "default": {
+              "fps": 10,
+              "countdown": 5
+            }
+          },
+          "chronicler.debug": {
+            "description": "Run with debug logging enabled",
+            "type": "boolean"
+          },
+          "chronicler.auto-record-live-share": {
+            "description": "Specifies whether recording should automatically start and stop when in a Live Share session",
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "typescript": "^3.2.2",
+    "vscode": "^1.1.26",
+    "@types/node": "^10.12.19"
+  },
+  "dependencies": {
+    "@arcsine/screen-recorder": "^0.1.5",
+    "nodemailer": "^6.5.0",
+    "vsls": "^0.3.1291"
+  }
+}
