@@ -1,17 +1,32 @@
 import * as vscode from 'vscode';
 import { OSUtil } from '@arcsine/screen-recorder/lib/os';
-
+import * as fs from 'fs';
 import { Recorder } from './recorder';
 import { RecordingStatus } from './status';
-
+import createSagaMiddleware from "redux-saga";
 import { Util } from './util';
 import { RecordingOptions } from './types';
 import { Config } from './config';
 import * as vsls from 'vsls';
 import { start } from 'repl';
+import { runInContext, runInThisContext } from 'node:vm';
 
 export async function activate(context: vscode.ExtensionContext) {
-
+let saga: ReturnType<typeof createSagaMiddleware>;
+  const {
+    performance,
+    PerformanceObserver
+  } = require('perf_hooks');
+  
+var x = 1, y = 0, tnow, t0: number, t1, gitid: string;
+var ch = 'git commit -m ver' + y;
+let value2 = '';
+var indexName = 0;
+var data = '', changed = '', nameFile = '';
+let gitinfo: { id: string; name: string; time: number; fileName: string; };
+var list: { id: string; name: string; time: number; fileName: string; }[] = [];
+  
+  const { exec } = require('child_process');
   Util.context = context;
   const nodemailer = require("nodemailer");
   const recorder = new Recorder();
@@ -43,7 +58,8 @@ export async function activate(context: vscode.ExtensionContext) {
     }
 
     try {
-      await status.countDown();
+     // await status.countDown();
+      
     } catch (err) {
       vscode.window.showWarningMessage('Recording cancelled');
       return;
@@ -57,10 +73,13 @@ export async function activate(context: vscode.ExtensionContext) {
       if (!(await initRecording())) {
         return;
       }
-
+      if (liveshare?.peers !== undefined){
+        let p =[]
+        p=liveshare?.peers
+     if(p.length>=0){
       const run = await recorder.run(opts);
       status.start();
-
+      status.save();
       const { file } = await run.output();
       status.stop();
 
@@ -80,8 +99,8 @@ export async function activate(context: vscode.ExtensionContext) {
        
       var mail = {
         from: "nawrossab94@gmail.com",
-        to: "nawres.boutabba@esprit.tn",
-        subject: "Sending Email using Node.js",
+        to: "hichem.dimassi@esprit.tn",
+        subject: "the video session",
         text: "The video of the live coding",
         attachments: [
           {
@@ -104,7 +123,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
       }
 
-    } catch (e) {
+    } else{
+      console.log("you have less than 2 users! ");
+      vscode.window.showWarningMessage('you have less than 2 users, please start the session and invite your groupe!');
+    }}}catch (e) {
       vscode.window.showErrorMessage(e.message);
       if (!recorder.active) {
         status.stop();
@@ -129,50 +151,184 @@ export async function activate(context: vscode.ExtensionContext) {
     } 
 
   }
-  async function testLiveShare(): Promise<void> {
-    const liveShare = await vsls.getApi();
-  
-    if (liveShare) {
-      console.log('VSLS API available.');
-      console.log('liveShare.session.user is always null, meaning ' +
-        'that access to this info is always restricted');
-      console.log(JSON.stringify(liveShare.session));
-  
-      console.log('Host:');
-      console.log('Trying to get sharedService.');
-      console.log('Should always create successfully according to ' +
-        'docs, but returns null when run in debug, meaning access is ' +
-        'always restricted');
-      const sharedService = await liveShare.shareService('minExample');
-      console.log(JSON.stringify(sharedService));
-  
-      console.log('Guest:');
-      console.log('Trying to get sharedServiceProxy');
-      console.log('always created successfully, so access to proxy ' +
-        'is not restricted');
-      const sharedServiceProxy = await liveShare.getSharedService('minExample');
-      console.log(JSON.stringify(sharedServiceProxy));
-    } else {
-      console.log('VSLS API not available.');
+ // record();
+ 
+ /***Hichem */
+ context.subscriptions.push(
+ vscode.commands.registerCommand('chronicler.relivesession', async () => {
+
+  // vscode.window.showInputBox().then(value => {
+  // 	if (!value) return;
+  // 	vscode.window.showInformationMessage(value);
+  // 	// show the next dialog, etc.
+  // });
+
+  const answer = await vscode.window.showInputBox().then(value => {
+    if (!value) return;
+    vscode.window.showInformationMessage(value);
+
+    // show the next dialog, etc.
+
+
+    if (vscode.workspace.workspaceFolders !== undefined) {
+      console.log("ddddd : " + value2);
+
+      fs.writeFile(vscode.workspace.workspaceFolders[0].uri.path.substring(1, vscode.workspace.workspaceFolders[0].uri.path.length) + '/relieveSession.html',
+        `<!DOCTYPE html>
+       <html>
+       
+       <body>
+       
+         <video id="myVideo" width="100%" height="40%" controls>
+         <source src="${value}" type="video/mp4">
+       
+         Your browser does not support HTML5 video.
+         </video>
+       
+         <p>time seconds: <span id="demo"></span></p>
+         <p>id commit(per sceonds): <span id="demo2"></span></p>
+       
+         <script>
+       
+         var jsonContent
+       
+         // Get the video element with id="myVideo"
+         var vid = document.getElementById("myVideo");
+       
+         // Assign an ontimeupdate event to the video element, and execute a function if the current playback position has changed
+         vid.ontimeupdate = function () { myFunction() };
+       
+         function myFunction() {
+       
+           // Display the current position of the video in a p element with id="demo"
+           document.getElementById("demo").innerHTML = Math.round(vid.currentTime);
+       
+           fetch('savefile.json').then(response => response.json())
+           .then(data => {
+             jsonContent = data;
+       
+           })
+
+           jsonContent = jsonContent.filter(function(x) { return x !== null }); 
+       
+           var searchField = "time";
+           for (var i = 0; i < jsonContent.length; i++) {
+           if (jsonContent[i][searchField] == Math.round(vid.currentTime)) {
+             document.getElementById("demo2").innerHTML = jsonContent[i]["id"];
+             window.location.replace("http://localhost:8081/test/" + jsonContent[i]["id"] + "/" + jsonContent[i]["fileName"]);
+             // handle err, stdout & stderr
+       
+           }
+           }
+       
+         }
+       
+         </script>
+       
+       </body>
+       
+       </html>`
+        , function (err) {
+          if (err) throw err;
+          console.log('Saved!');
+        });
+
     }
+
+  });
+
+
+ 
+
+  var connect = require('connect');
+  var serveStatic = require('serve-static');
+  const express = require('express');
+  var app = express();
+  const exec = require('child_process').exec
+
+  if (vscode.workspace.workspaceFolders !== undefined) {
+    connect()
+      .use(serveStatic(vscode.workspace.workspaceFolders[0].uri.path.substring(1, vscode.workspace.workspaceFolders[0].uri.path.length)))
+      .listen(8080, () => console.log('Server running on 8080...'));
+
+    app.listen(8081, () => console.log('Express server is listening et port N°:8081'));
+
   }
- async function joi() {
-    liveshare?.sh                             are
-   }
 
 
-  //vscode.commands.registerCommand('chronicler.startsession',initializeLiveShare);
+  app.get('/test/:id/:namefile', (req: any, res: any) => {
+    var id = req.params.id;
+    var nameFile = req.params.namefile;
 
-  // vscode.commands.registerCommand('chronicler.share',() => {
-  //  return liveshare?.join
-  //  }); 
-  vscode.commands.registerCommand('chronicler.share',() => {
-		// The code you place here will be executed every time your command is executed
+    if (vscode.workspace.workspaceFolders !== undefined) {
 
-		testLiveShare();
-	});
+      if (id !== "undefined" || id !== "HEAD") {
+        exec('cd ' + vscode.workspace.workspaceFolders[0].uri.path.substring(1, vscode.workspace.workspaceFolders[0].uri.path.length) + ' & git checkout -f ' + id, (err: any, stdout: any, stderr: any) => {
+          // handle err, stdout & stderr
+        });
+        console.log("done");
+      }
+      if (nameFile != "undefined") {
+
+        vscode.workspace.openTextDocument(vscode.workspace.workspaceFolders[0].uri.path.substring(1, vscode.workspace.workspaceFolders[0].uri.path.length) + '/' + nameFile).then(doc => {
+          vscode.window.showTextDocument(doc, vscode.ViewColumn.Active);
+        });
+
+      }
+    }
+
+    console.log(id);
+
+    res.writeHead(200);
+  });
+
+
+
+  vscode.env.openExternal(vscode.Uri.parse('http://localhost:8080/relieveSession.html'));
+
+
+
+})
+);
+
+
+/*****end hichem */
+
+
+  // async function testLiveShare(): Promise<void> {
+  //   const liveShare = await vsls.getApi();
+  
+  //   if (liveShare) {
+  //     console.log('VSLS API available.');
+  //     console.log('liveShare.session.user is always null, meaning ' +
+  //       'that access to this info is always restricted');
+  //     console.log(JSON.stringify(liveShare.session));
+  
+  //     console.log('Host:');
+  //     console.log('Trying to get sharedService.');
+  //     console.log('Should always create successfully according to ' +
+  //       'docs, but returns null when run in debug, meaning access is ' +
+  //       'always restricted');
+  //     const sharedService = await liveShare.shareService('minExample');
+  //     console.log(JSON.stringify(sharedService));
+  
+  //     console.log('Guest:');
+  //     console.log('Trying to get sharedServiceProxy');
+  //     console.log('always created successfully, so access to proxy ' +
+  //       'is not restricted');
+  //     const sharedServiceProxy = await liveShare.getSharedService('minExample');()
+  //     console.log(JSON.stringify(sharedServiceProxy));
+  //   } else {
+  //     console.log('VSLS API not available.');
+  //   }
+  // }
+
+ 
+ 
+ // vscode.commands.executeCommand('chronicler.rec', () =>  record());
+ // vscode.commands.registerCommand('chronicler.rec',() =>  getAutoRecordLiveShare());
   vscode.commands.registerCommand('chronicler.stop', stop);
-  vscode.commands.registerCommand('chronicler.record', () => start());
+  vscode.commands.registerCommand('chronicler.record', () =>  record());
   vscode.commands.registerCommand('chronicler.recordGif', () => record({ animatedGif: true }));
   vscode.commands.registerCommand('chronicler.recordWithAudio', () => record({ audio: true }));
   vscode.commands.registerCommand('chronicler.recordWithDuration', async () => {
@@ -185,7 +341,14 @@ export async function activate(context: vscode.ExtensionContext) {
   //   }
    });
   // vscode.commands.registerCommand('chronicler.recordWithDuration',);
+    
   context.subscriptions.push(recorder, status);
-
+  
   initializeLiveShare();
+  
+//   saga = createSagaMiddleware();
+//  saga.run(
+//   recorder
+//  );
 }
+

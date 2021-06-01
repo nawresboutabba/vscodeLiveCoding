@@ -1,6 +1,6 @@
 {
   "name": "chronicler",
-  "displayName": "liveRecorder",
+  "displayName": "liveCoding",
   "description": "Visual Studio Session Recorder",
   "version": "0.1.0",
   "publisher": "devsquad",
@@ -8,6 +8,12 @@
     "type": "git",
     "url": "https://github.com/"
   },
+  "extensionDependencies": [
+    "ms-vsliveshare.vsliveshare",
+    "karigari.chat",
+    "lostintangent.vsls-whiteboard",
+   "ms-vsliveshare.vsliveshare-audio"
+  ],
   "keywords": [
     "Editor Recording",
     "Video Recording",
@@ -22,7 +28,16 @@
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "onFileSystem:vsls",
+    "onCommand:liveshare.start",
+    "onCommand:liveshare.startFromActivityBar",
+    "onCommand:liveshare.startReadOnly",
+    "onCommand:liveshare.startReadOnlyFromActivityBar",
+    "onCommand:liveshare.startReadOnlyFromSessionExplorer",
+    "onCommand:chronicler.record",
+    "onCommand:chronicler.stop",
+    "onCommand:chronicler.relivesession",
+    "onCommand:chronicler.rec"
   ],
   "icon": "images/logo.png",
   "galleryBanner": {
@@ -35,12 +50,22 @@
       {
         "title": "Start session",
         "category": "liveRecorder",
-        "command": "chronicler.share"
+        "command": "liveshare.startReadOnly"
+      },
+      {
+        "title": "relivesession",
+        "category": "liveRecorder",
+        "command": "chronicler.relivesession"
       },
       {
         "title": "Start Recording",
         "category": "liveRecorder",
         "command": "chronicler.record"
+      },
+      {
+        "title": "Start Rec",
+        "category": "liveRecorder",
+        "command": "chronicler.rec"
       },
       {
         "title": "Start Recording GIF",
@@ -116,13 +141,39 @@
     "test": "npm run compile && node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
-    "typescript": "^3.2.2",
-    "vscode": "^1.1.26",
-    "@types/node": "^10.12.19"
+    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-node-resolve": "^11.2.0",
+    "@rollup/plugin-typescript": "^8.2.0",
+    "@tsconfig/svelte": "^1.0.10",
+    "@types/glob": "^7.1.3",
+    "@types/mocha": "^8.0.4",
+    "@types/node": "^12.11.7",
+    "@types/vscode": "^1.53.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.1",
+    "@typescript-eslint/parser": "^4.14.1",
+    "concurrently": "^6.0.0",
+    "eslint": "^7.19.0",
+    "glob": "^7.1.6",
+    "mocha": "^8.2.1",
+    "rollup-plugin-svelte": "^7.1.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "svelte": "^3.35.0",
+    "svelte-check": "^1.2.0",
+    "svelte-preprocess": "^4.6.9",
+    "ts-loader": "^8.0.14",
+    "typescript": "^4.1.3",
+    "vscode-test": "^1.5.0",
+    "webpack": "^5.19.0",
+    "webpack-cli": "^4.4.0"
   },
   "dependencies": {
     "@arcsine/screen-recorder": "^0.1.5",
+    "child_process": "^1.0.2",
+    "connect": "^3.7.0",
+    "express": "^4.17.1",
     "nodemailer": "^6.5.0",
+    "redux-saga": "^1.1.3",
+    "serve-static": "^1.14.1",
     "vsls": "^0.3.1291"
   }
 }
