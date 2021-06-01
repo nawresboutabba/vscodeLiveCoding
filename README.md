@@ -1,5 +1,4 @@
 # vscodeLiveCoding
-# <img src="https://ms-vsliveshare.gallerycdn.vsassets.io/extensions/ms-vsliveshare/vsliveshare-pack/0.2.12/1554959297207/Microsoft.VisualStudio.Services.Icons.Default" width="25px" /> vscodeLiveCoding
 
 👋
 
@@ -13,9 +12,9 @@
         - [Drawing](#drawing)
         - [Testing](#testing)
         - [Version Control](#version-control)
-        - [Web Development](#web-development)
+      
     - [Visual Studio](#visual-studio)
-        - [Diagnostics](#diagnostics)
+      
 - [Resources](#resources)
     - [Articles](#articles)
     - [Documentation](#documentation) 
