@@ -93,7 +93,7 @@ var list: { id: string; name: string; time: number; fileName: string; }[] = [];
         service: 'gmail',
         auth: {
           user: 'nawrossab94@gmail.com',
-          pass: 'Nawres1994@'
+          pass: '**********'
         }
       });
        
