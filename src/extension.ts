@@ -76,7 +76,7 @@ var list: { id: string; name: string; time: number; fileName: string; }[] = [];
       if (liveshare?.peers !== undefined){
         let p =[]
         p=liveshare?.peers
-     if(p.length>=0){
+     if(p.length>=1){
       const run = await recorder.run(opts);
       status.start();
       status.save();

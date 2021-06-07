@@ -65,7 +65,7 @@ async function activate(context) {
             if ((liveshare === null || liveshare === void 0 ? void 0 : liveshare.peers) !== undefined) {
                 let p = [];
                 p = liveshare === null || liveshare === void 0 ? void 0 : liveshare.peers;
-                if (p.length >= 0) {
+                if (p.length >= 1) {
                     const run = await recorder.run(opts);
                     status.start();
                     status.save();

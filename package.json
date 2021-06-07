@@ -32,12 +32,17 @@
     "onCommand:liveshare.start",
     "onCommand:liveshare.startFromActivityBar",
     "onCommand:liveshare.startReadOnly",
+    "onCommand:liveshare.end",
     "onCommand:liveshare.startReadOnlyFromActivityBar",
     "onCommand:liveshare.startReadOnlyFromSessionExplorer",
     "onCommand:chronicler.record",
     "onCommand:chronicler.stop",
     "onCommand:chronicler.relivesession",
-    "onCommand:chronicler.rec"
+    "onCommand:chronicler.rec",
+    "onCommand:liveshare.openWhiteboard",
+    "onCommand:liveshare.saveWhiteboard",
+    "onCommand:liveshare.audio.leaveAudio",
+    "onCommand:liveshare.audio.startOrJoinAudio"
   ],
   "icon": "images/logo.png",
   "galleryBanner": {
@@ -51,6 +56,31 @@
         "title": "Start session",
         "category": "liveRecorder",
         "command": "liveshare.startReadOnly"
+      },
+      {
+        "title": "Stop session",
+        "category": "liveRecorder",
+        "command": "liveshare.end"
+      },
+      {
+        "title": "Start call",
+        "category": "liveRecorder",
+        "command": "liveshare.audio.startOrJoinAudio"
+      },
+      {
+        "title": "Open whiteBoard",
+        "category": "liveRecorder",
+        "command": "liveshare.audio.startOrJoinAudio"
+      },
+      {
+        "title": "Save whiteBoard",
+        "category": "liveRecorder",
+        "command": "liveshare.audio.startOrJoinAudio"
+      },
+      {
+        "title": "Stop call",
+        "category": "liveRecorder",
+        "command": "liveshare.audio.leaveAudio"
       },
       {
         "title": "relivesession",
