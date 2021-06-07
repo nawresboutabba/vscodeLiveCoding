@@ -63,6 +63,11 @@
         "command": "liveshare.end"
       },
       {
+        "title": "Join session",
+        "category": "liveRecorder",
+        "command": "liveshare.join"
+      },
+      {
         "title": "Start call",
         "category": "liveRecorder",
         "command": "liveshare.audio.startOrJoinAudio"
@@ -70,12 +75,12 @@
       {
         "title": "Open whiteBoard",
         "category": "liveRecorder",
-        "command": "liveshare.audio.startOrJoinAudio"
+        "command": "liveshare.openWhiteboard"
       },
       {
         "title": "Save whiteBoard",
         "category": "liveRecorder",
-        "command": "liveshare.audio.startOrJoinAudio"
+        "command": "liveshare.saveWhiteboard"
       },
       {
         "title": "Stop call",

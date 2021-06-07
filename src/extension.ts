@@ -17,7 +17,7 @@ let saga: ReturnType<typeof createSagaMiddleware>;
     performance,
     PerformanceObserver
   } = require('perf_hooks');
-  
+ var File: string ;
 var x = 1, y = 0, tnow, t0: number, t1, gitid: string;
 var ch = 'git commit -m ver' + y;
 let value2 = '';
@@ -76,7 +76,7 @@ var list: { id: string; name: string; time: number; fileName: string; }[] = [];
       if (liveshare?.peers !== undefined){
         let p =[]
         p=liveshare?.peers
-     if(p.length>=1){
+     if(p.length>=0){
       const run = await recorder.run(opts);
       status.start();
       status.save();
@@ -87,8 +87,10 @@ var list: { id: string; name: string; time: number; fileName: string; }[] = [];
 
       if (choice === 'Open') {
         await OSUtil.openFile(file);
+        File=file;
       } else if (choice === 'send') {
        //() vscode.env.clipboard.writeText(file);
+       File=file;
        var sender = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -124,6 +126,7 @@ var list: { id: string; name: string; time: number; fileName: string; }[] = [];
       }
 
     } else{
+   
       console.log("you have less than 2 users! ");
       vscode.window.showWarningMessage('you have less than 2 users, please start the session and invite your groupe!');
     }}}catch (e) {

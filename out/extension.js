@@ -12,6 +12,7 @@ const vsls = require("vsls");
 async function activate(context) {
     let saga;
     const { performance, PerformanceObserver } = require('perf_hooks');
+    var File;
     var x = 1, y = 0, tnow, t0, t1, gitid;
     var ch = 'git commit -m ver' + y;
     let value2 = '';
@@ -65,7 +66,7 @@ async function activate(context) {
             if ((liveshare === null || liveshare === void 0 ? void 0 : liveshare.peers) !== undefined) {
                 let p = [];
                 p = liveshare === null || liveshare === void 0 ? void 0 : liveshare.peers;
-                if (p.length >= 1) {
+                if (p.length >= 0) {
                     const run = await recorder.run(opts);
                     status.start();
                     status.save();
@@ -74,9 +75,11 @@ async function activate(context) {
                     const choice = await vscode.window.showInformationMessage(`Session output ${file}`, 'Open', 'send', 'Dismiss');
                     if (choice === 'Open') {
                         await os_1.OSUtil.openFile(file);
+                        File = file;
                     }
                     else if (choice === 'send') {
                         //() vscode.env.clipboard.writeText(file);
+                        File = file;
                         var sender = nodemailer.createTransport({
                             service: 'gmail',
                             auth: {
