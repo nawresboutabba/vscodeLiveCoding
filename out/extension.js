@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.activate = void 0;
 const vscode = require("vscode");
 const os_1 = require("@arcsine/screen-recorder/lib/os");
-const fs = require("fs");
 const recorder_1 = require("./recorder");
 const status_1 = require("./status");
 const util_1 = require("./util");
@@ -66,7 +65,7 @@ async function activate(context) {
             if ((liveshare === null || liveshare === void 0 ? void 0 : liveshare.peers) !== undefined) {
                 let p = [];
                 p = liveshare === null || liveshare === void 0 ? void 0 : liveshare.peers;
-                if (p.length >= 0) {
+                if (p.length >= 1) {
                     const run = await recorder.run(opts);
                     status.start();
                     status.save();
@@ -143,25 +142,33 @@ async function activate(context) {
     // record();
     /***Hichem */
     context.subscriptions.push(vscode.commands.registerCommand('chronicler.relivesession', async () => {
+        const fs = require('fs');
+        // destination will be created or overwritten by default.
+        if (vscode.workspace.workspaceFolders !== undefined) {
+            fs.copyFile(File, vscode.workspace.workspaceFolders[0].uri.path.substring(1, vscode.workspace.workspaceFolders[0].uri.path.length) + "/File.mp4", (err) => {
+                if (err)
+                    throw err;
+                console.log('File was copied to destination');
+            });
+        }
         // vscode.window.showInputBox().then(value => {
         // 	if (!value) return;
         // 	vscode.window.showInformationMessage(value);
         // 	// show the next dialog, etc.
         // });
-        const answer = await vscode.window.showInputBox().then(value => {
-            if (!value)
-                return;
-            vscode.window.showInformationMessage(value);
-            // show the next dialog, etc.
-            if (vscode.workspace.workspaceFolders !== undefined) {
-                console.log("ddddd : " + value2);
-                fs.writeFile(vscode.workspace.workspaceFolders[0].uri.path.substring(1, vscode.workspace.workspaceFolders[0].uri.path.length) + '/relieveSession.html', `<!DOCTYPE html>
+        // const answer = await vscode.window.showInputBox().then(value => {
+        //   if (!value) return;
+        //   vscode.window.showInformationMessage(value);
+        // show the next dialog, etc.
+        if (vscode.workspace.workspaceFolders !== undefined) {
+            console.log("ddddd : " + value2);
+            fs.writeFile(vscode.workspace.workspaceFolders[0].uri.path.substring(1, vscode.workspace.workspaceFolders[0].uri.path.length) + '/relieveSession.html', `<!DOCTYPE html>
        <html>
        
        <body>
        
          <video id="myVideo" width="100%" height="40%" controls>
-         <source src="${value}" type="video/mp4">
+         <source src="File.mp4" type="video/mp4">
        
          Your browser does not support HTML5 video.
          </video>
@@ -209,12 +216,12 @@ async function activate(context) {
        </body>
        
        </html>`, function (err) {
-                    if (err)
-                        throw err;
-                    console.log('Saved!');
-                });
-            }
-        });
+                if (err)
+                    throw err;
+                console.log('Saved!');
+            });
+        }
+        // });
         var connect = require('connect');
         var serveStatic = require('serve-static');
         const express = require('express');

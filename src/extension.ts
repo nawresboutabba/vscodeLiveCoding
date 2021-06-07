@@ -76,7 +76,7 @@ var list: { id: string; name: string; time: number; fileName: string; }[] = [];
       if (liveshare?.peers !== undefined){
         let p =[]
         p=liveshare?.peers
-     if(p.length>=0){
+     if(p.length>=1){
       const run = await recorder.run(opts);
       status.start();
       status.save();
@@ -126,12 +126,15 @@ var list: { id: string; name: string; time: number; fileName: string; }[] = [];
       }
 
     } else{
-   
+     
       console.log("you have less than 2 users! ");
       vscode.window.showWarningMessage('you have less than 2 users, please start the session and invite your groupe!');
-    }}}catch (e) {
+    }
+  }
+       }catch (e) {
       vscode.window.showErrorMessage(e.message);
       if (!recorder.active) {
+        
         status.stop();
       }
     }
@@ -159,16 +162,24 @@ var list: { id: string; name: string; time: number; fileName: string; }[] = [];
  /***Hichem */
  context.subscriptions.push(
  vscode.commands.registerCommand('chronicler.relivesession', async () => {
+  const fs = require('fs');
 
+// destination will be created or overwritten by default.
+if (vscode.workspace.workspaceFolders !== undefined) {
+fs.copyFile(File, vscode.workspace.workspaceFolders[0].uri.path.substring(1, vscode.workspace.workspaceFolders[0].uri.path.length)+"/File.mp4",(err : any) => {
+  if (err) throw err;
+  console.log('File was copied to destination');
+});
+}
   // vscode.window.showInputBox().then(value => {
   // 	if (!value) return;
   // 	vscode.window.showInformationMessage(value);
   // 	// show the next dialog, etc.
   // });
 
-  const answer = await vscode.window.showInputBox().then(value => {
-    if (!value) return;
-    vscode.window.showInformationMessage(value);
+  // const answer = await vscode.window.showInputBox().then(value => {
+  //   if (!value) return;
+  //   vscode.window.showInformationMessage(value);
 
     // show the next dialog, etc.
 
@@ -183,7 +194,7 @@ var list: { id: string; name: string; time: number; fileName: string; }[] = [];
        <body>
        
          <video id="myVideo" width="100%" height="40%" controls>
-         <source src="${value}" type="video/mp4">
+         <source src="File.mp4" type="video/mp4">
        
          Your browser does not support HTML5 video.
          </video>
@@ -231,14 +242,14 @@ var list: { id: string; name: string; time: number; fileName: string; }[] = [];
        </body>
        
        </html>`
-        , function (err) {
+        , function (err: any) {
           if (err) throw err;
           console.log('Saved!');
         });
 
     }
 
-  });
+  // });
 
 
  
